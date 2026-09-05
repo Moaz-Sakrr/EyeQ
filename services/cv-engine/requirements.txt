@@ -1,1 +1,8 @@
 pytest>=8.0
+
+# Real head detector (task A2.1). Kept out of the stub import path via
+# detector/factory.py, so these are only loaded when EYEQ_DETECTOR_WEIGHTS is set.
+# NOT ultralytics — the shipped cv-engine runs exported ONNX only (ADR-0002).
+numpy>=1.26
+onnxruntime>=1.17
+opencv-python-headless>=4.9
