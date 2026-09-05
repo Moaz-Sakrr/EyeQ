@@ -16,3 +16,14 @@ echo "Weights directory: $DEST"
 #   curl -fSL -o "$DEST/head_detector.onnx" \
 #     "https://github.com/Moaz-Sakrr/EyeQ/releases/download/<tag>/head_detector.onnx"
 echo "TODO: add head-detector ONNX release URL once uploaded (A2.1)."
+
+# --- Head pose (task A2.2) --------------------------------------------------
+# 6DRepNet exported to ONNX (ortho6d output). Loaded when EYEQ_HEADPOSE_WEIGHTS
+# is set; otherwise the stub is used. Test the pretrained weights before any
+# retraining (see CLAUDE.md A2.2).
+#
+#   EYEQ_HEADPOSE_WEIGHTS="$DEST/head_pose_6drepnet.onnx"
+#
+# TODO(A2.2): export 6DRepNet -> ONNX, confirm output layout ((M,6) ortho6d),
+# upload to a GitHub Release, and fetch it here.
+echo "TODO: add head-pose (6DRepNet) ONNX release URL once uploaded (A2.2)."
