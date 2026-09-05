@@ -12,7 +12,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[3].parent / "contracts"))
 from schemas.seat_observation import SeatObservation  # noqa: E402
 
-from .detector.stub import HeadDetectorStub
+from .detector.factory import build_head_detector
 from .headpose.stub import HeadPoseStub
 from .gaze.stub import GazeStub
 from .behavior.stub import BehaviorObjectStub
@@ -22,8 +22,8 @@ from .fusion.cri import CRIEngine, CRIConfig
 
 class Pipeline:
     def __init__(self, resolver: SeatResolver | None = None,
-                 cfg: CRIConfig | None = None):
-        self.detector = HeadDetectorStub()
+                 cfg: CRIConfig | None = None, detector=None):
+        self.detector = detector or build_head_detector()
         self.headpose = HeadPoseStub()
         self.gaze = GazeStub()
         self.behavior = BehaviorObjectStub()
