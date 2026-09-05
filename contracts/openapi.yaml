@@ -1,0 +1,71 @@
+openapi: 3.0.3
+info:
+  title: EyeQ API
+  version: 0.1.0
+  description: >
+    Contract between backend and Flutter client. FR6: alert payloads never
+    include behavioral history; history requires a prior adjudication.
+paths:
+  /health:
+    get:
+      summary: Liveness probe
+      responses:
+        "200": { description: OK }
+
+  /sessions/{session_id}/alerts:
+    get:
+      summary: List alerts for a session
+      parameters:
+        - { name: session_id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: Alert list (no history included)
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Alert" }
+
+  /alerts/{alert_id}/adjudicate:
+    post:
+      summary: Record the Controller's independent decision
+      parameters:
+        - { name: alert_id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [decision]
+              properties:
+                decision: { type: string, enum: [confirmed, dismissed] }
+      responses:
+        "200": { description: Recorded }
+
+  /alerts/{alert_id}/history:
+    get:
+      summary: Behavioral history — FR6 gated
+      description: Returns 403 until an adjudication exists for this alert.
+      parameters:
+        - { name: alert_id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200": { description: History }
+        "403": { description: Adjudication not yet recorded (FR6) }
+
+components:
+  schemas:
+    Alert:
+      type: object
+      required: [alert_id, session_id, seat_id, timestamp, cri]
+      properties:
+        alert_id: { type: string }
+        session_id: { type: string }
+        seat_id: { type: string }
+        timestamp: { type: number }
+        cri: { type: number, minimum: 0, maximum: 1 }
+        evidence_clip_ref: { type: string, nullable: true }
+        contributing:
+          type: object
+          additionalProperties: { type: number }
+      # NOTE: no history field. Adding one breaks FR6.

@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push: { branches: [main] }
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+
+      - name: Install
+        run: |
+          pip install -r services/backend/requirements.txt
+          pip install -r services/cv-engine/requirements.txt
+
+      - name: CV engine tests
+        run: PYTHONPATH=services/cv-engine/src:contracts pytest services/cv-engine/tests -q
+
+      - name: Backend tests (includes FR6 enforcement)
+        run: PYTHONPATH=services/backend/src:contracts pytest services/backend/tests -q

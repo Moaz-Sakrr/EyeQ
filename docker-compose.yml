@@ -1,0 +1,28 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: eyeq
+      POSTGRES_PASSWORD: eyeq
+      POSTGRES_DB: eyeq
+    ports: ["5432:5432"]
+    volumes:
+      - ./infra/db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U eyeq"]
+      interval: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: .
+      dockerfile: services/backend/Dockerfile
+    ports: ["8000:8000"]
+    depends_on:
+      db: { condition: service_healthy }
+
+  cv-engine:
+    build:
+      context: .
+      dockerfile: services/cv-engine/Dockerfile
+    depends_on: [backend]

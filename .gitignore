@@ -1,0 +1,34 @@
+# ---- never commit data or weights ----
+*.pt
+*.pth
+*.onnx
+*.engine
+*.tflite
+weights/
+data/raw/
+data/processed/
+datasets/
+*.mp4
+*.avi
+*.zip
+*.tar.gz
+
+# ---- python ----
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# ---- flutter ----
+services/frontend/build/
+services/frontend/.dart_tool/
+.flutter-plugins*
+
+# ---- env / editors ----
+.env
+.env.*
+.idea/
+.vscode/
+.DS_Store
